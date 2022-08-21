@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <title>Ferris Wheel</title>
+
+<!--     
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        
+        in vec3 aPosition;
+        in vec3 aColor;
+        out vec4 vColor;
+        
+        
+        void
+        main()
+        {
+            gl_Position = vec4(aPosition, 1.0);
+            vColor = vec4(aColor, 1.0);
+        }
+
+                    gl_Position = u_matrix * aPosition_new;
+
+    </script> -->
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        
+        in vec4 aPosition;
+        uniform float uTheta;
+        uniform float flag;
+        uniform vec2 u_translation;
+        uniform mat4 u_matrix;
+        uniform mat4 y_matrix;
+        
+        out vec4 vColor;
+
+        void
+        main()
+        {
+            float s = sin(uTheta);
+            float c = cos(uTheta); 
+            vec4 aPosition_new = aPosition;
+
+            if (flag == 0.0) {
+                aPosition_new.x = s*aPosition.y + c*aPosition.x;
+                aPosition_new.y =  -s*aPosition.x + c*aPosition.y;
+                aPosition_new.z = aPosition.z;
+                vColor = vec4( 0.2, 0.3, 0.3, 1.0);
+            }
+            else {
+                float rx = s*u_translation.y + c*u_translation.x;
+                float ry = -s*u_translation.x + c*u_translation.y;
+
+                aPosition_new.x = aPosition.x + rx;
+                aPosition_new.y = aPosition.y + ry;
+                aPosition_new.z = aPosition.z;
+                vColor = vec4( 0.2, 0.2, 0.6, 0.5);
+            }
+
+            aPosition_new.w = 1.0;
+            gl_Position = u_matrix * aPosition_new;
+        }
+    </script>
+        
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+        precision mediump float;
+
+        in vec4 vColor;
+        out vec4 fColor;
+        
+        void
+        main()
+        {
+            fColor = vColor;
+        }
+    </script>
+
+    <script type="text/javascript" src="./Common/initShaders.js"></script>
+    <script type="text/javascript" src="./Common/MVnew.js"></script>
+    <script type="text/javascript" src="ferris_wheel.js"></script>
+</head>
+
+<body>
+    <!-- <div>
+        <input id="vel" type="range"
+        min="0" max="0.2" step="0.02" value="0.1" /> Wheel Velocity
+        10
+    </div> -->
+
+    <!-- <div>
+        <input id="cvel" type="range"
+        min="0" max="10" step="1" value="5" /> Camera Velocity
+        10
+    </div> -->
+
+    <!-- <div>
+        <input id="carts" type="range"
+        min="5" max="20" step="2" value="8" /> Number of Carts
+        10
+    </div> -->
+
+
+    <canvas id="gl-canvas" width="700" height="700">
+        Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    </body>
+</html>
